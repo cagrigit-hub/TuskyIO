@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: cakitomakito/tm-auth
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: jwt_key
+            - name: PG_PASSWORD
+              value: password
+            - name: PG_USER
+              value: postgres
+            - name: PG_DB
+              value: auth
+            - name: PG_HOST
+              value: auth-postgres-srv
+            - name: PG_PORT
+              value: "5432"
